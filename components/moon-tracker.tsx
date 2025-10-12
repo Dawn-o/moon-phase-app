@@ -53,7 +53,7 @@ export default function MoonTracker() {
               <span className="text-foreground font-bold text-sm sm:text-base">
                 {location.error
                   ? "UNKNOWN"
-                  : `${location.city}, ${location.country}`}
+                  : `${location.country}`}
               </span>
             </div>
             <div className="text-center">
