@@ -1,12 +1,14 @@
 import SunCalc from "suncalc";
 
 export interface MoonPhaseData {
-  phase: number; // 0-1 (0 = new moon, 0.5 = full moon)
+  phase: number;
   phaseName: string;
-  illumination: number; // 0-100%
+  illumination: number;
   nextFullMoon: Date;
   nextNewMoon: Date;
-  age: number; // days since new moon
+  age: number;
+  phaseAngle: number;
+  parallacticAngle: number;
 }
 
 export function getMoonPhase(date: Date = new Date()): MoonPhaseData {
@@ -14,13 +16,10 @@ export function getMoonPhase(date: Date = new Date()): MoonPhaseData {
   const phase = moonIllumination.phase;
   const illumination = Math.round(moonIllumination.fraction * 100);
 
-  // Calculate moon age (days since new moon)
   const age = phase * 29.53;
 
-  // Determine phase name
   const phaseName = getPhaseName(phase);
 
-  // Find next full and new moon
   const nextFullMoon = findNextPhase(date, 0.5);
   const nextNewMoon = findNextPhase(date, 0);
 
@@ -31,6 +30,8 @@ export function getMoonPhase(date: Date = new Date()): MoonPhaseData {
     nextFullMoon,
     nextNewMoon,
     age: Math.round(age),
+    phaseAngle: moonIllumination.angle,
+    parallacticAngle: moonIllumination.angle,
   };
 }
 
