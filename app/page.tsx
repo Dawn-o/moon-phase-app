@@ -33,8 +33,8 @@ export default function Home() {
       <section className="container mx-auto max-w-6xl px-4 py-6 sm:py-10">
         <div className="text-center space-y-3 sm:space-y-4">
           <div className="inline-block border-4 border-double border-border p-4 sm:p-6 md:p-8 bg-card">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-[family-name:var(--font-orbitron)] tracking-[0.3em] sm:tracking-[0.5em] text-foreground">
-              MOON.SYS
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-[family-name:var(--font-orbitron)] tracking-tight sm:tracking-wide md:tracking-[0.3em] text-foreground">
+              MOON.TODAY
             </h1>
           </div>
           <p className="text-muted-foreground font-[family-name:var(--font-vt323)] text-lg sm:text-2xl md:text-3xl">
