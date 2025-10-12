@@ -20,8 +20,9 @@ const orbitron = Orbitron({
 });
 
 export const metadata: Metadata = {
-  title: "MOON.SYS v1.0",
-  description: "Lunar Phase Tracking System • Terminal Interface",
+  title: "Moon Today",
+  description:
+    "Moon Today — See the current moon phase, illumination, and lunar details for your location.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
