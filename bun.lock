@@ -4,12 +4,14 @@
     "": {
       "name": "moon-phase-app",
       "dependencies": {
+        "@types/suncalc": "^1.9.2",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "lucide-react": "^0.545.0",
         "next": "15.5.4",
         "react": "19.1.0",
         "react-dom": "19.1.0",
+        "suncalc": "^1.9.0",
         "tailwind-merge": "^3.3.1",
       },
       "devDependencies": {
@@ -142,6 +144,8 @@
 
     "@types/react-dom": ["@types/react-dom@19.2.1", "", { "peerDependencies": { "@types/react": "^19.2.0" } }, "sha512-/EEvYBdT3BflCWvTMO7YkYBHVE9Ci6XdqZciZANQgKpaiDRGOLIlRo91jbTNRQjgPFWVaRxcYc0luVNFitz57A=="],
 
+    "@types/suncalc": ["@types/suncalc@1.9.2", "", {}, "sha512-ATAGBHHfA1TlE2tjfidLyTcysjoT2JHHEAmWRULh73SU9UTn++j5fqHEW16X6Y/2Li87jEQXzgu4R/OOdlDqzw=="],
+
     "caniuse-lite": ["caniuse-lite@1.0.30001749", "", {}, "sha512-0rw2fJOmLfnzCRbkm8EyHL8SvI2Apu5UbnQuTsJ0ClgrH8hcwFooJ1s5R0EP8o8aVrFu8++ae29Kt9/gZAZp/Q=="],
 
     "chownr": ["chownr@3.0.0", "", {}, "sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g=="],
@@ -213,6 +217,8 @@
     "source-map-js": ["source-map-js@1.2.1", "", {}, "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA=="],
 
     "styled-jsx": ["styled-jsx@5.1.6", "", { "dependencies": { "client-only": "0.0.1" }, "peerDependencies": { "react": ">= 16.8.0 || 17.x.x || ^18.0.0-0 || ^19.0.0-0" } }, "sha512-qSVyDTeMotdvQYoHWLNGwRFJHC+i+ZvdBRYosOFgC+Wg1vx4frN2/RG/NA7SYqqvKNLf39P2LSRA2pu6n0XYZA=="],
+
+    "suncalc": ["suncalc@1.9.0", "", {}, "sha512-vMJ8Byp1uIPoj+wb9c1AdK4jpkSKVAywgHX0lqY7zt6+EWRRC3Z+0Ucfjy/0yxTVO1hwwchZe4uoFNqrIC24+A=="],
 
     "tailwind-merge": ["tailwind-merge@3.3.1", "", {}, "sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g=="],
 
