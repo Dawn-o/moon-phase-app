@@ -17,7 +17,6 @@ export function getMoonPhase(date: Date = new Date()): MoonPhaseData {
   const illumination = Math.round(moonIllumination.fraction * 100);
 
   const age = phase * 29.53;
-
   const phaseName = getPhaseName(phase);
 
   const nextFullMoon = findNextPhase(date, 0.5);
@@ -35,6 +34,47 @@ export function getMoonPhase(date: Date = new Date()): MoonPhaseData {
   };
 }
 
+export function getMoonTimes(date: Date, latitude: number, longitude: number) {
+  const moonTimes = SunCalc.getMoonTimes(date, latitude, longitude);
+  const moonPosition = SunCalc.getMoonPosition(date, latitude, longitude);
+
+  return {
+    rise: moonTimes.rise,
+    set: moonTimes.set,
+    altitude: moonPosition.altitude,
+    azimuth: moonPosition.azimuth,
+    distance: moonPosition.distance,
+  };
+}
+
+export function getNextPhaseDate(
+  targetPhase: number,
+  startDate: Date = new Date()
+): Date {
+  let date = new Date(startDate);
+  const tolerance = 0.03;
+
+  for (let i = 0; i < 60; i++) {
+    date.setDate(date.getDate() + 1);
+    const moonData = SunCalc.getMoonIllumination(date);
+
+    let currentPhase = moonData.phase;
+    let target = targetPhase;
+
+    if (target === 0) {
+      if (currentPhase < tolerance || currentPhase > 1 - tolerance) {
+        return date;
+      }
+    } else {
+      if (Math.abs(currentPhase - target) < tolerance) {
+        return date;
+      }
+    }
+  }
+
+  return date;
+}
+
 function getPhaseName(phase: number): string {
   if (phase < 0.033 || phase > 0.967) return "NEW MOON";
   if (phase < 0.216) return "WAXING CRESCENT";
@@ -47,17 +87,7 @@ function getPhaseName(phase: number): string {
 }
 
 function findNextPhase(startDate: Date, targetPhase: number): Date {
-  let date = new Date(startDate);
-  for (let i = 0; i < 60; i++) {
-    date.setDate(date.getDate() + 1);
-    const moonData = SunCalc.getMoonIllumination(date);
-    if (targetPhase === 0.5) {
-      if (moonData.phase >= 0.48 && moonData.phase <= 0.52) return date;
-    } else {
-      if (moonData.phase < 0.03 || moonData.phase > 0.97) return date;
-    }
-  }
-  return date;
+  return getNextPhaseDate(targetPhase, startDate);
 }
 
 export function getDaysUntil(targetDate: Date): number {

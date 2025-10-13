@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="border-t-2 border-border p-6 sm:p-8 mt-12 sm:mt-16 bg-background/95 backdrop-blur">
@@ -7,7 +9,13 @@ export default function Footer() {
             &gt; END OF TRANSMISSION<span className="blink">_</span>
           </p>
           <p className="text-center text-muted-foreground/50 font-[family-name:var(--font-space-mono)] text-[10px] sm:text-xs mt-2">
-            MOON.TODAY &copy; 2025 | ALL SYSTEMS NOMINAL
+            <Link
+              href="https://github.com/dawn-o"
+              className="underline hover:text-foreground/60 transition-colors"
+            >
+              MOON.TODAY
+            </Link>
+            &copy; 2025 | ALL SYSTEMS NOMINAL
           </p>
         </div>
       </div>

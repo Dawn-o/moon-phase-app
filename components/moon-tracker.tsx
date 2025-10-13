@@ -3,16 +3,20 @@
 import { useEffect, useState } from "react";
 import {
   getMoonPhase,
+  getMoonTimes,
   getDaysUntil,
   type MoonPhaseData,
 } from "@/lib/moon-phase";
+import { useIPGeolocation } from "@/hooks/use-ip-geolocation";
 import MoonPhaseIcon from "./moon-phase-icon";
 import { ChevronsUp, ChevronsDown } from "lucide-react";
 
 export default function MoonTracker() {
   const [moonData, setMoonData] = useState<MoonPhaseData | null>(null);
+  const [moonTimes, setMoonTimes] = useState<any>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showMore, setShowMore] = useState(false);
+  const location = useIPGeolocation();
 
   useEffect(() => {
     setMoonData(getMoonPhase());
@@ -31,6 +35,17 @@ export default function MoonTracker() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!location.loading && !location.error) {
+      const times = getMoonTimes(
+        new Date(),
+        location.latitude,
+        location.longitude
+      );
+      setMoonTimes(times);
+    }
+  }, [location]);
+
   if (!moonData) {
     return (
       <div className="text-center p-8">
@@ -46,18 +61,71 @@ export default function MoonTracker() {
   const daysToFullMoon = getDaysUntil(moonData.nextFullMoon);
   const daysToNewMoon = getDaysUntil(moonData.nextNewMoon);
 
+  const formatDateTime = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = date.toLocaleDateString("en-US", { month: "short" });
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    return `${day} ${month} ${year}, ${hours}:${minutes}:${seconds}`;
+  };
+
+  const formatTime = (date: Date) => {
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+    return `${hours}:${minutes}:${seconds}`;
+  };
+
   return (
     <>
+      {!location.loading && !location.error && (
+        <div className="border-4 border-border bg-background p-4 sm:p-5 retro-shadow mb-6 sm:mb-8">
+          <div className="border-b-2 border-border pb-3 mb-4">
+            <p className="text-foreground font-[family-name:var(--font-vt323)] text-lg sm:text-xl">
+              [OBSERVER_LOCATION]
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-[family-name:var(--font-space-mono)]">
+            <div className="border-2 border-border p-3 bg-card">
+              <p className="text-muted-foreground text-xs mb-1">LOCATION</p>
+              <p className="text-foreground font-bold text-sm">
+                {location.city}, {location.country}
+              </p>
+            </div>
+            <div className="border-2 border-border p-3 bg-card">
+              <p className="text-muted-foreground text-xs mb-1">COORDINATES</p>
+              <p className="text-foreground font-bold text-sm tabular-nums">
+                {location.latitude.toFixed(4)}°, {location.longitude.toFixed(4)}
+                °
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="border-4 border-border bg-background p-5 sm:p-6 retro-shadow mb-6 sm:mb-8">
         <div className="border-b-2 border-border pb-3 mb-5">
           <p className="text-foreground font-[family-name:var(--font-vt323)] text-xl sm:text-2xl">
             [CRITICAL_LUNAR_STATUS]
           </p>
         </div>
+
+        <div className="border-2 border-border p-4 bg-card mb-4">
+          <p className="text-muted-foreground text-xs sm:text-sm mb-2 font-[family-name:var(--font-space-mono)]">
+            CURRENT_TIME
+          </p>
+          <p className="text-foreground font-bold text-lg sm:text-xl font-[family-name:var(--font-vt323)] tabular-nums">
+            {formatDateTime(currentTime)}
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="border-2 border-border p-4 bg-card">
             <p className="text-muted-foreground text-xs sm:text-sm mb-2 font-[family-name:var(--font-space-mono)]">
-              CURRENT PHASE
+              CURRENT_PHASE
             </p>
             <p className="text-foreground font-bold text-lg sm:text-xl font-[family-name:var(--font-vt323)]">
               {moonData.phaseName}
@@ -122,6 +190,32 @@ export default function MoonTracker() {
               </span>
             </div>
           </div>
+
+          {moonTimes && (
+            <>
+              <div className="border-2 border-border p-3 bg-card hover:bg-accent transition-colors">
+                <div className="flex justify-between items-center gap-4">
+                  <span className="text-muted-foreground text-xs sm:text-sm">
+                    &gt; MOONRISE:
+                  </span>
+                  <span className="text-foreground font-bold text-sm sm:text-base tabular-nums">
+                    {moonTimes.rise ? formatTime(moonTimes.rise) : "N/A"}
+                  </span>
+                </div>
+              </div>
+              <div className="border-2 border-border p-3 bg-card hover:bg-accent transition-colors">
+                <div className="flex justify-between items-center gap-4">
+                  <span className="text-muted-foreground text-xs sm:text-sm">
+                    &gt; MOONSET:
+                  </span>
+                  <span className="text-foreground font-bold text-sm sm:text-base tabular-nums">
+                    {moonTimes.set ? formatTime(moonTimes.set) : "N/A"}
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
+
           <div className="border-2 border-border p-3 bg-card hover:bg-accent transition-colors">
             <div className="flex justify-between items-center gap-4">
               <span className="text-muted-foreground text-xs sm:text-sm">
@@ -191,19 +285,58 @@ export default function MoonTracker() {
                 </span>
               </div>
             </div>
+
+            {moonTimes && (
+              <>
+                <div className="border-2 border-border p-3 bg-card hover:bg-accent transition-colors">
+                  <div className="flex justify-between items-center gap-4">
+                    <span className="text-muted-foreground text-xs sm:text-sm">
+                      &gt; MOON_ALTITUDE:
+                    </span>
+                    <span className="text-foreground font-bold text-sm sm:text-base">
+                      {moonTimes.altitude
+                        ? (moonTimes.altitude * (180 / Math.PI)).toFixed(2)
+                        : "0.00"}
+                      °
+                    </span>
+                  </div>
+                </div>
+                <div className="border-2 border-border p-3 bg-card hover:bg-accent transition-colors">
+                  <div className="flex justify-between items-center gap-4">
+                    <span className="text-muted-foreground text-xs sm:text-sm">
+                      &gt; MOON_AZIMUTH:
+                    </span>
+                    <span className="text-foreground font-bold text-sm sm:text-base">
+                      {moonTimes.azimuth
+                        ? (moonTimes.azimuth * (180 / Math.PI)).toFixed(2)
+                        : "0.00"}
+                      °
+                    </span>
+                  </div>
+                </div>
+                <div className="border-2 border-border p-3 bg-card hover:bg-accent transition-colors">
+                  <div className="flex justify-between items-center gap-4">
+                    <span className="text-muted-foreground text-xs sm:text-sm">
+                      &gt; MOON_DISTANCE:
+                    </span>
+                    <span className="text-foreground font-bold text-sm sm:text-base">
+                      {moonTimes.distance
+                        ? moonTimes.distance.toFixed(0)
+                        : "384400"}{" "}
+                      KM
+                    </span>
+                  </div>
+                </div>
+              </>
+            )}
+
             <div className="border-2 border-border p-3 bg-card hover:bg-accent transition-colors">
               <div className="flex justify-between items-center gap-4">
                 <span className="text-muted-foreground text-xs sm:text-sm">
                   &gt; NEXT_FULL_MOON_DATE:
                 </span>
                 <span className="text-foreground font-bold text-sm sm:text-base tabular-nums">
-                  {moonData.nextFullMoon
-                    .toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })
-                    .replace(/\//g, ".")}
+                  {formatDateTime(moonData.nextFullMoon).split(",")[0]}
                 </span>
               </div>
             </div>
@@ -213,34 +346,7 @@ export default function MoonTracker() {
                   &gt; NEXT_NEW_MOON_DATE:
                 </span>
                 <span className="text-foreground font-bold text-sm sm:text-base tabular-nums">
-                  {moonData.nextNewMoon
-                    .toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })
-                    .replace(/\//g, ".")}
-                </span>
-              </div>
-            </div>
-            <div className="border-2 border-border p-3 bg-card hover:bg-accent transition-colors">
-              <div className="flex justify-between items-center gap-4">
-                <span className="text-muted-foreground text-xs sm:text-sm">
-                  &gt; TIMESTAMP:
-                </span>
-                <span className="text-foreground font-bold text-sm sm:text-base tabular-nums">
-                  {currentTime
-                    .toLocaleString("en-US", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      second: "2-digit",
-                      hour12: false,
-                    })
-                    .replace(/\//g, ".")
-                    .replace(", ", " ")}
+                  {formatDateTime(moonData.nextNewMoon).split(",")[0]}
                 </span>
               </div>
             </div>
