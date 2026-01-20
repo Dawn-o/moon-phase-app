@@ -10,7 +10,7 @@ export default function Footer() {
           </p>
           <p className="text-center text-muted-foreground/50 font-[family-name:var(--font-space-mono)] text-[10px] sm:text-xs mt-2">
             <Link
-              href="https://github.com/dawn-o"
+              href="https://github.com/rushelasli"
               className="underline hover:text-foreground/60 transition-colors"
             >
               MOON.TODAY
